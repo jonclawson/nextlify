@@ -71,19 +71,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.14.0
-          terraform_wrapper: false
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v3
+      #   with:
+      #     terraform_version: 1.14.0
+      #     terraform_wrapper: false
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform
-        env:
-          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      # - name: Terraform Init
+      #   run: terraform init
+      #   working-directory: terraform
+      #   env:
+      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
       # - name: Ensure Netlify Site Exists
       #   id: ensure_netlify_site

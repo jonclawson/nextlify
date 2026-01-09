@@ -56,6 +56,7 @@ jobs:
 
       - name: Set Variables
         run: |
+          NETLIFY_AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
           npm install -g netlify-cli
           netlify link --id ${{ steps.ensure_netlify_site.outputs.existing_site_id }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
 

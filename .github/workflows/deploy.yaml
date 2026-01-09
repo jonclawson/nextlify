@@ -54,6 +54,15 @@ jobs:
             echo "existing_site_id=$SITE_ID" >> $GITHUB_OUTPUT
           fi
 
+      - name: Set Variables
+        run: |
+          npm install -g netlify-cli
+          netlify link --site ${{ steps.ensure_netlify_site.outputs.existing_site_id }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          
+          URL=$(netlify api getSite --site-id ${{ steps.ensure_netlify_site.outputs.existing_site_id }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} | jq -r '.url')
+          echo "NEXTAUTH_URL=$URL" >> $GITHUB_ENV
+          netlify env:set NEXTAUTH_URL=$URL --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
       - name: Install Dependencies
         run: npm ci
 

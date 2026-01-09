@@ -6,5 +6,5 @@
 
 output "netlify_site_id" {
   description = "Netlify Site ID"
-  value       = netlify_site.my_site.id
+  value       = local.site_id
 }

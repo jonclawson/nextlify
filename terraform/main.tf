@@ -7,10 +7,9 @@ terraform {
     # Official provider for environment variables
     netlify = {
       source = "netlify/netlify"
-      team_id = var.netlify_team_id # Replace with your actual team ID
     }
     # Community provider for site creation
-    aegir_netlify = {
+    aegirnetlify = {
       source = "AegirHealth/netlify"
     }
   }
@@ -22,13 +21,13 @@ provider "netlify" {
 }
 
 # Configure AegirHealth provider
-provider "aegir_netlify" {
+provider "aegirnetlify" {
   token = var.netlify_auth_token
 }
 
 # 1. Create the site using AegirHealth
 resource "netlify_site" "my_site" {
-  provider = aegir_netlify
+  provider = aegirnetlify
   name     = "nextlify-deploy"
   # ... other site config ...
 }
@@ -37,6 +36,8 @@ resource "netlify_site" "my_site" {
 resource "netlify_environment_variable" "api_key" {
   provider = netlify
   site_id  = netlify_site.my_site.id
+  team_id = var.netlify_team_id # Replace with your actual team ID
+
   key      = "nextauth_url"
   values = [
     {

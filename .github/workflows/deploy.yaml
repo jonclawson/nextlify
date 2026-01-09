@@ -62,44 +62,20 @@ jobs:
           # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
 
 
-destroy:
-    name: Destroy Infrastructure
-    if: github.event.inputs.destroy == 'destroy'
+  deploy:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.destroy != 'destroy' }}
+    name: Deploy to Netlify
+    needs: terraform
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          terraform_version: 1.14.0
-          terraform_wrapper: false
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform
-        env:
-          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
-        working-directory: terraform
-        env:
-          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-          TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
-          TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
-
-      # - name: Setup Node
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '20'
-      #     cache: 'npm'
+          node-version: '20'
+          cache: 'npm'
 
       # - name: Ensure Netlify Site Exists
       #   id: ensure_netlify_site
@@ -156,6 +132,31 @@ destroy:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+          TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
+          # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
 
       # - name: Ensure Netlify Site Exists
       #   id: ensure_netlify_site

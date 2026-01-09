@@ -29,7 +29,7 @@ provider "aegir_netlify" {
 # 1. Create the site using AegirHealth
 resource "netlify_site" "my_site" {
   provider = aegir_netlify
-  name     = "my-automated-site"
+  name     = "nextlify-deploy"
   # ... other site config ...
 }
 
@@ -40,7 +40,7 @@ resource "netlify_environment_variable" "api_key" {
   key      = "nextauth_url"
   values = [
     {
-      value   = var.nextauth_url,
+      value   = "https://nextlify-deploy.netlify.app/",
       context = "all",
     }
   ]

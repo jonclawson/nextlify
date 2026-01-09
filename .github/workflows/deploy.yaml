@@ -59,7 +59,7 @@ jobs:
           TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
           TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
-          TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
+          # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
 
 
 destroy:

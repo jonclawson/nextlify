@@ -83,6 +83,7 @@ jobs:
       - name: Ensure Netlify Site Exists
         id: ensure_netlify_site
         run: |
+          SITE_NAME=${{ secrets.NETLIFY_SITE_NAME || 'nextlify-deploy' }}
           AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
           
           # Query all sites and find by name

@@ -14,52 +14,52 @@ permissions:
   contents: write
 
 jobs:
-  # terraform:
-  #   if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.destroy != 'destroy' }}
-  #   name: Provision Infrastructure
-  #   # needs: test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  terraform:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.destroy != 'destroy' }}
+    name: Provision Infrastructure
+    # needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Setup Terraform
-  #       uses: hashicorp/setup-terraform@v3
-  #       with:
-  #         terraform_version: 1.14.0
-  #         terraform_wrapper: false
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+          terraform_wrapper: false
 
-  #     - name: Terraform Init
-  #       run: terraform init
-  #       working-directory: terraform
-  #       env:
-  #         TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-  #         TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-  #         TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
-  #     # - name: Clean up old Cloudflare state (one-time migration)
-  #     #   run: |
-  #     #     echo "Removing old Cloudflare resources from state..."
-  #     #     terraform state rm cloudflare_pages_project.nosoup
-  #     #     terraform state rm cloudflare_d1_database.nosoup_db
-  #     #     terraform state rm cloudflare_r2_bucket.nosoup_uploads
-  #     #   working-directory: terraform
-  #     #   continue-on-error: true
-  #     #   env:
-  #     #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-  #     #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-  #     #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      # - name: Clean up old Cloudflare state (one-time migration)
+      #   run: |
+      #     echo "Removing old Cloudflare resources from state..."
+      #     terraform state rm cloudflare_pages_project.nosoup
+      #     terraform state rm cloudflare_d1_database.nosoup_db
+      #     terraform state rm cloudflare_r2_bucket.nosoup_uploads
+      #   working-directory: terraform
+      #   continue-on-error: true
+      #   env:
+      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
-  #     - name: Terraform Apply
-  #       run: terraform apply -auto-approve
-  #       working-directory: terraform
-  #       env:
-  #         TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-  #         TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-  #         TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-  #         TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-  #         TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
-  #         # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+          TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
+          # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
 
   deploy:
     if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.destroy != 'destroy' }}
@@ -70,31 +70,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v3
-      #   with:
-      #     terraform_version: 1.14.0
-      #     terraform_wrapper: false
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+          terraform_wrapper: false
 
-      # - name: Terraform Init
-      #   run: terraform init
-      #   working-directory: terraform
-      #   env:
-      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
-      # - name: Ensure Netlify Site Exists
-      #   id: ensure_netlify_site
-      #   run: |
-      #     NETLIFY_SITE_ID=$(terraform output -raw netlify_site_id)
-      #     echo "Netlify Site ID: $NETLIFY_SITE_ID"
-      #     echo "existing_site_id=$NETLIFY_SITE_ID" >> $GITHUB_OUTPUT
-      #   working-directory: terraform
-      #   env:
-      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Ensure Netlify Site Exists
+        id: ensure_netlify_site
+        run: |
+          NETLIFY_SITE_ID=$(terraform output -raw netlify_site_id)
+          echo "Netlify Site ID: $NETLIFY_SITE_ID"
+          echo "existing_site_id=$NETLIFY_SITE_ID" >> $GITHUB_OUTPUT
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -102,30 +102,30 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Ensure Netlify Site Exists
-        id: ensure_netlify_site
-        run: |
-          SITE_NAME=${{ secrets.NETLIFY_SITE_NAME || 'nextlify-deploy' }}
-          AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
+      # - name: Ensure Netlify Site Exists
+      #   id: ensure_netlify_site
+      #   run: |
+      #     SITE_NAME=${{ secrets.NETLIFY_SITE_NAME || 'nextlify-deploy' }}
+      #     AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
           
-          # Query all sites and find by name
-          SITES_RESPONSE=$(curl -s -H "Authorization: Bearer $AUTH_TOKEN" "https://api.netlify.com/api/v1/sites")
-          SITE_ID=$(echo "$SITES_RESPONSE" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -1)
+      #     # Query all sites and find by name
+      #     SITES_RESPONSE=$(curl -s -H "Authorization: Bearer $AUTH_TOKEN" "https://api.netlify.com/api/v1/sites")
+      #     SITE_ID=$(echo "$SITES_RESPONSE" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -1)
           
-          if [ -z "$SITE_ID" ]; then
-            echo "Site '$SITE_NAME' not found. Creating a new site..."
-            CREATE_RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $AUTH_TOKEN" -H "Content-Type: application/json" -d '{"name":"'$SITE_NAME'"}' "https://api.netlify.com/api/v1/sites")
-            NEW_SITE_ID=$(echo "$CREATE_RESPONSE" | jq -r '.id')
-            if [ -z "$NEW_SITE_ID" ]; then
-              echo "Error: Failed to extract site ID from response"
-              exit 1
-            fi
-            echo "New site created with ID: $NEW_SITE_ID"
-            echo "existing_site_id=$NEW_SITE_ID" >> $GITHUB_OUTPUT
-          else
-            echo "Site '$SITE_NAME' found with ID: $SITE_ID"
-            echo "existing_site_id=$SITE_ID" >> $GITHUB_OUTPUT
-          fi
+      #     if [ -z "$SITE_ID" ]; then
+      #       echo "Site '$SITE_NAME' not found. Creating a new site..."
+      #       CREATE_RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $AUTH_TOKEN" -H "Content-Type: application/json" -d '{"name":"'$SITE_NAME'"}' "https://api.netlify.com/api/v1/sites")
+      #       NEW_SITE_ID=$(echo "$CREATE_RESPONSE" | jq -r '.id')
+      #       if [ -z "$NEW_SITE_ID" ]; then
+      #         echo "Error: Failed to extract site ID from response"
+      #         exit 1
+      #       fi
+      #       echo "New site created with ID: $NEW_SITE_ID"
+      #       echo "existing_site_id=$NEW_SITE_ID" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "Site '$SITE_NAME' found with ID: $SITE_ID"
+      #       echo "existing_site_id=$SITE_ID" >> $GITHUB_OUTPUT
+      #     fi
 
       - name: Install Dependencies
         run: npm ci
@@ -158,53 +158,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v3
-      #   with:
-      #     terraform_version: 1.14.0
-      #     terraform_wrapper: false
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+          terraform_wrapper: false
 
-      # - name: Terraform Init
-      #   run: terraform init
-      #   working-directory: terraform
-      #   env:
-      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
-      # - name: Terraform Destroy
-      #   run: terraform destroy -auto-approve
-      #   working-directory: terraform
-      #   env:
-      #     TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-      #     TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
-      #     TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-      #     TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
-      #     # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: terraform
+        env:
+          TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ secrets.TF_WORKSPACE }}
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+          TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TF_VAR_netlify_team_id: ${{ secrets.NETLIFY_TEAM_ID }}
+          # TF_VAR_nextauth_url: ${{ secrets.NEXTAUTH_URL }}
 
-      - name: Ensure Netlify Site Exists
-        id: ensure_netlify_site
-        run: |
-          SITE_NAME=${{ secrets.NETLIFY_SITE_NAME || 'nextlify-deploy' }}
-          AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
+      # - name: Ensure Netlify Site Exists
+      #   id: ensure_netlify_site
+      #   run: |
+      #     SITE_NAME=${{ secrets.NETLIFY_SITE_NAME || 'nextlify-deploy' }}
+      #     AUTH_TOKEN=${{ secrets.NETLIFY_AUTH_TOKEN }}
           
-          # Query all sites and find by name
-          SITES_RESPONSE=$(curl -s -H "Authorization: Bearer $AUTH_TOKEN" "https://api.netlify.com/api/v1/sites")
-          SITE_ID=$(echo "$SITES_RESPONSE" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -1)
+      #     # Query all sites and find by name
+      #     SITES_RESPONSE=$(curl -s -H "Authorization: Bearer $AUTH_TOKEN" "https://api.netlify.com/api/v1/sites")
+      #     SITE_ID=$(echo "$SITES_RESPONSE" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -1)
           
-          if [ -z "$SITE_ID" ]; then
-            echo "Site '$SITE_NAME' not found. Nothing to destroy."
-          else
-            echo "Site '$SITE_NAME' found with ID: $SITE_ID"
-            echo "existing_site_id=$SITE_ID" >> $GITHUB_OUTPUT
-          fi
+      #     if [ -z "$SITE_ID" ]; then
+      #       echo "Site '$SITE_NAME' not found. Nothing to destroy."
+      #     else
+      #       echo "Site '$SITE_NAME' found with ID: $SITE_ID"
+      #       echo "existing_site_id=$SITE_ID" >> $GITHUB_OUTPUT
+      #     fi
 
-      - name: Destroy Netlify Site
-        run: |
-          curl -X DELETE \
-            -H "Authorization: Bearer ${{ secrets.NETLIFY_AUTH_TOKEN }}" \
-            "https://api.netlify.com/api/v1/sites/${{ steps.ensure_netlify_site.outputs.existing_site_id }}"     
+      # - name: Destroy Netlify Site
+      #   run: |
+      #     curl -X DELETE \
+      #       -H "Authorization: Bearer ${{ secrets.NETLIFY_AUTH_TOKEN }}" \
+      #       "https://api.netlify.com/api/v1/sites/${{ steps.ensure_netlify_site.outputs.existing_site_id }}"     
 
 
 

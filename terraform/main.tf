@@ -62,3 +62,9 @@ variable "netlify_team_id" {
 #   description = "NextAuth URL"
 #   type        = string
 # }
+
+locals {
+  # Use the connection URI provided by Neon project, append database name
+  # database_url = "${neon_project.nosoup_db.connection_uri}/${var.database_name}?sslmode=require"
+  site_id = netlify_site.my_site.id
+}

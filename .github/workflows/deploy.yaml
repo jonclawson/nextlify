@@ -62,12 +62,18 @@ jobs:
         run: npm run build  
 
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.2.4
+        uses: nwtgck/actions-netlify@v3.0
         with:
-          publish-dir: './public'
-          production-branch: 'main'
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ steps.ensure_netlify_site.outputs.existing_site_id }}
+          publish-dir: '.next'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          # enable-pull-request-comment: false
+          # enable-commit-comment: true
+          # overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ steps.ensure_netlify_site.outputs.existing_site_id }}
 
 
   destroy:

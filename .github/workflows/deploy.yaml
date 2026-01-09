@@ -37,13 +37,11 @@ jobs:
           
           # Query all sites and find by name
           SITES_RESPONSE=$(curl -s -H "Authorization: Bearer $AUTH_TOKEN" "https://api.netlify.com/api/v1/sites")
-          echo "API Response: $SITES_RESPONSE"
           SITE_ID=$(echo "$SITES_RESPONSE" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -1)
           
           if [ -z "$SITE_ID" ]; then
             echo "Site '$SITE_NAME' not found. Creating a new site..."
             CREATE_RESPONSE=$(curl -s -X POST -H "Authorization: Bearer $AUTH_TOKEN" -H "Content-Type: application/json" -d '{"name":"'$SITE_NAME'"}' "https://api.netlify.com/api/v1/sites")
-            echo "API Response: $CREATE_RESPONSE"
             NEW_SITE_ID=$(echo "$CREATE_RESPONSE" | jq -r '.id')
             if [ -z "$NEW_SITE_ID" ]; then
               echo "Error: Failed to extract site ID from response"
@@ -58,9 +56,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-
-      - name: Build Project
-        run: npm run build  
 
       - name: Deploy to Netlify
         run: |

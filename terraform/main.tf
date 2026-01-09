@@ -58,7 +58,7 @@ variable "netlify_team_id" {
   type        = string
 }
 
-variable "nextauth_url" {
-  description = "NextAuth URL"
-  type        = string
-}
+# variable "nextauth_url" {
+#   description = "NextAuth URL"
+#   type        = string
+# }
